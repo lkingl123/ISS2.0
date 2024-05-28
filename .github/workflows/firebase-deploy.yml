@@ -1,0 +1,33 @@
+name: Deploy Expo Web App to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - master  # Trigger deployment on push to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '22.1.0'  # Use the Node.js version your project requires
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install Expo CLI
+      run: npm install -g expo-cli
+
+    - name: Build the web app
+      run: npm run build:web
+
+    - name: Deploy to Firebase Hosting
+      env:
+        FIREBASE_TOKEN: ${{ 1//06CaRspktMpXWCgYIARAAGAYSNwF-L9Irh391II2S8I1v4OTAClsIGfpLFXR4NLPhlZWCHDq9dQz8i-Cgo5mn50bv9w7OaATgI1I }}
+      run: firebase deploy --only hosting
