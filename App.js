@@ -1,20 +1,69 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// App.js
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import HomeScreen from './screens/HomeScreen';
+import UploadDocsScreen from './screens/UploadDocsScreen'; // Import the new screen
+import useAuth from './hooks/useAuth';
+
+const Stack = createStackNavigator();
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    const {
+        isLoggedIn,
+        user,
+        handleRegister,
+        handleLogin,
+        handleLogout,
+    } = useAuth();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                {isLoggedIn ? (
+                    <>
+                        <Stack.Screen name="Home">
+                            {(props) => (
+                                <HomeScreen
+                                    {...props}
+                                    user={user}
+                                    handleLogout={handleLogout}
+                                    navigation={props.navigation} // Pass navigation prop
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="UploadDocs">
+                            {(props) => (
+                                <UploadDocsScreen
+                                    {...props}
+                                    navigation={props.navigation} // Pass navigation prop
+                                />
+                            )}
+                        </Stack.Screen>
+                    </>
+                ) : (
+                    <>
+                        <Stack.Screen name="Login">
+                            {(props) => (
+                                <LoginScreen
+                                    {...props}
+                                    handleLogin={handleLogin}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="Register">
+                            {(props) => (
+                                <RegisterScreen
+                                    {...props}
+                                    handleRegister={handleRegister}
+                                />
+                            )}
+                        </Stack.Screen>
+                    </>
+                )}
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+}
