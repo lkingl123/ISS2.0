@@ -19,10 +19,13 @@ jobs:
         node-version: '22.1.0'  # Use the Node.js version your project requires
 
     - name: Install dependencies
-      run: npm install
+      run: npm install --legacy-peer-deps
 
     - name: Install Expo CLI
       run: npm install -g expo-cli
+
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
 
     - name: Build the web app
       run: npm run build:web
